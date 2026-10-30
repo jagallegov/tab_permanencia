@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proyecto Permanencia</title>
+<link rel="icon" type="image/x-icon" href="https://gestionapp.medellin.unal.edu.co/cdn/assets/favicon.ico">
+<meta name="description" content="Modelo analítico de datos para la permanencia y las trayectorias estudiantiles de la Sede Medellín: datos disponibles para consulta en cada etapa, desde el acceso potencial hasta el egreso.">
+<style>
+/* =========================================================
+   Proyecto Permanencia — micrositio
+   Estructura y componentes adaptados de un micrositio de referencia
+   Paleta: INSUMOS/PALETAS (paleta1 / paleta2)
+   ========================================================= */
+/* ---------- Tipografía: Ancízar (Sans y Serif), archivos en /fuentes ---------- */
+@font-face { font-family: 'Ancizar Sans'; src: local('Ancizar Sans'), url('fuentes/AncizarSans-VariableFont_wght.ttf') format('truetype'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Ancizar Sans'; src: local('Ancizar Sans Italic'), url('fuentes/AncizarSans-Italic-VariableFont_wght.ttf') format('truetype'); font-weight: 100 900; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Ancizar Serif'; src: local('Ancizar Serif Light'), url('fuentes/AncizarSerif-Light.ttf') format('truetype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Ancizar Serif'; src: local('Ancizar Serif'), url('fuentes/AncizarSerif-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Ancizar Serif'; src: local('Ancizar Serif Medium'), url('fuentes/ancizar-serif-medium-regular.ttf') format('truetype'); font-weight: 500 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Ancizar Serif'; src: local('Ancizar Serif Bold'), url('fuentes/AncizarSerif-Bold.ttf') format('truetype'); font-weight: 700 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Ancizar Serif'; src: local('Ancizar Serif Medium Italic'), url('fuentes/ancizar-serif-medium-italic.ttf') format('truetype'); font-weight: 300 500; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Ancizar Serif'; src: local('Ancizar Serif SemiBold Italic'), url('fuentes/AncizarSerif-SemiBoldItalic.ttf') format('truetype'); font-weight: 600 900; font-style: italic; font-display: swap; }
+
+:root {
+    --color-blanco: #ffffff;
+    --color-negro: #000000;
+
+    --color-azul-marino: #1C2F49;
+    --color-azul-noche: #061D38;
+    --color-amarillo: #E3CC42;
+    --color-naranja: #FEA029;
+    --color-coral: #F9524D;
+    --color-violeta-claro: #BB55E6;
+    --color-violeta: #7617D9;
+    --color-indigo: #4B09CE;
+    --color-verde-azul: #3BAEBA;
+    --color-gris-plata: #CACFD5;
+    --color-blanco-hueso: #FBFAF4;
+    --color-gris: #EEF0F3;
+    --color-gris-claro: #F7F8FA;
+    --color-gris-oscuro: #5B6472;
+    --color-texto-suave: #3A4A66;
+
+    --fs-1600: clamp(5.25rem, 11vw, 7.25rem);
+    --fs-1500: clamp(4.5rem, 9vw, 6rem);
+    --fs-1400: clamp(4rem, 8vw, 5rem);
+    --fs-1200: clamp(3.5rem, 6vw, 4rem);
+    --fs-1100: clamp(2.6rem, 5vw, 3.4rem);
+    --fs-1000: clamp(1.9rem, 3.2vw, 2.4rem);
+    --fs-900: clamp(1.5rem, 2.6vw, 1.8rem);
+    --fs-800: clamp(1.4rem, 2.4vw, 1.6rem);
+    --fs-700: clamp(1.25rem, 2vw, 1.45rem);
+    --fs-600: clamp(1.1rem, 1.6vw, 1.25rem);
+    --fs-500: clamp(1rem, 1.3vw, 1.1rem);
+    --fs-400: clamp(.95rem, 1.1vw, 1rem);
+    --fs-300: clamp(.9rem, 1vw, .95rem);
+    --fs-200: clamp(.78rem, .85vw, .82rem);
+    --fs-100: clamp(0.7rem, 0.75vw, 0.75rem);
+
+    --fuente-titulos: 'Ancizar Serif', Georgia, 'Times New Roman', serif;
+    --fuente-texto: 'Ancizar Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+    --radio-grande: clamp(20px, 3vw, 32px);
+    --ancho-contenido: 760px;
+    --sombra: 0 6px 14px rgba(6, 29, 56, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    --sombra-alta: 0 10px 22px rgba(6, 29, 56, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+    --hero-ease: cubic-bezier(.2,.8,.2,1);
+    --hero-dur: 1600ms;
+}
+
+html { margin: 0; scroll-behavior: smooth; overflow-x: clip; }
+*, *::before, *::after { box-sizing: border-box; }
+body {
+    font-synthesis: none;
+    margin: 0;
+    padding: 0;
+    overflow-x: clip;
+    background-color: var(--color-blanco-hueso);
+    color: var(--color-azul-marino);
+    font-family: var(--fuente-texto);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+:focus-visible { outline: 3px solid var(--color-amarillo); outline-offset: 3px; }
+img, svg { display: block; }
+.oculto-visualmente {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+#svg-sprites { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* ---------- Pie de página institucional UNAL ----------
+   Reglas del kit de diseño (kitUnal 12112024, tema claro) con sus variables resueltas. */
+.unal-footer {
+    --bs-footer-padding-x: 1rem; --bs-footer-padding-y: .75rem; --bs-footer-gap: .5rem; --bs-footer-help-link-gap: .5rem; --bs-footer-more-info-font-size: 14px;
+    display: flex; flex-direction: column; align-items: center; gap: var(--bs-footer-gap);
+    padding: var(--bs-footer-padding-y) var(--bs-footer-padding-x);
+    background-color: #677d29; color: #ffffff; font-family: var(--fuente-texto);
+}
+.unal-footer > * { width: 100%; }
+.unal-footer p { margin: 0; font-size: .9375rem; line-height: 1; text-align: center; }
+.unal-footer a { color: #ffffff; font-weight: 700; text-decoration: none; }
+.unal-footer a:hover { color: #deefb0; }
+.unal-footer .text-decoration-underline { text-decoration: underline; }
+.unal-footer .vr { display: inline-block; align-self: stretch; width: 1px; min-height: 1em; background-color: #ffffff; opacity: .25; }
+.unal-footer .info-help { display: flex; justify-content: center; align-items: center; gap: var(--bs-footer-gap); }
+.unal-footer .info-help .dependency { width: 100%; text-align: end; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.unal-footer .info-help .help-link { display: flex; align-items: center; gap: var(--bs-footer-help-link-gap); width: 100%; font-size: .9375rem; }
+.unal-footer .info-help .help-link .icon { width: 24px; height: 24px; flex: 0 0 auto; }
+.unal-footer .info-help .help-link :last-child { flex: 1 0 0; width: 0; text-align: start; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.unal-footer .more-info { display: flex; justify-content: center; align-items: center; gap: var(--bs-footer-gap); font-size: var(--bs-footer-more-info-font-size); }
+.unal-footer .more-info > p { width: 100%; }
+.unal-footer .more-info :first-child { text-align: end; }
+.unal-footer .more-info :last-child { text-align: start; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.unal-footer .more-info .vr { display: block; }
+
+/* ---------- Encabezado institucional UNAL ----------
+   Reglas tomadas del kit de diseño (kitUnal 12112024, tema principal claro) con sus
+   variables resueltas. Según la guía, solo se cambia el texto del nombre de la aplicación;
+   no se alteran colores ni forma. */
+.unal-header {
+    position: relative; width: 100%; z-index: 15; margin: 0 0 var(--bs-header-margin-bottom);
+    --bs-header-bg: #677d29; --bs-header-color: #ffffff; --bs-header-top-bg: #3d4041;
+    --bs-header-icon-width: 6.25rem; --bs-header-icon-padding-x: .5rem; --bs-header-padding-x: 1.25rem;
+    --bs-header-padding-y: 1rem; --bs-header-border-radius: 0; --bs-header-bottom-bg: #EDEDED; --bs-header-bottom-height: 2.5rem;
+    --bs-header-margin-bottom: 0; --bs-header-top-height: .5rem;
+    --bs-header-padding-x-left: calc(var(--bs-header-icon-padding-x) + var(--bs-header-icon-width) + var(--bs-header-padding-x));
+    font-family: var(--fuente-texto); line-height: 1.5;
+}
+@media (min-width: 576px) { .unal-header { --bs-header-icon-padding-x: 1rem; } }
+@media (min-width: 768px) { .unal-header { --bs-header-icon-padding-x: 2rem; } }
+@media (min-width: 992px) { .unal-header { --bs-header-icon-padding-x: 2.5rem; } }
+@media (min-width: 1200px) { .unal-header { --bs-header-icon-padding-x: 2.5rem; } }
+.unal-header .padded-container { padding-left: var(--bs-header-padding-x-left); padding-right: var(--bs-header-padding-x); width: 100%; }
+.unal-header .section-icon { margin-left: var(--bs-header-icon-padding-x); }
+.unal-header .section-icon .banner-container { position: absolute; top: 0; z-index: 10000; }
+.unal-header .section-icon .banner-container .icon-link {
+    position: relative; display: flex; width: var(--bs-header-icon-width); padding-top: 0;
+    background-color: #ffffff; border-radius: 0 0 50% 50%; font-size: 0; line-height: 0;
+    box-shadow: rgba(0, 0, 0, .3) 0 2px 3px 0, rgba(0, 0, 0, .15) 0 6px 10px 4px; transition: width .1s ease-in 0s;
+}
+.unal-header .section-icon .banner-container .icon-link img { width: 100%; }
+.unal-header #divider-top { background-color: var(--bs-header-top-bg); height: var(--bs-header-top-height); }
+.unal-header #section-menu-middle {
+    display: flex; align-items: center; background-color: var(--bs-header-bg); color: var(--bs-header-color);
+    padding-top: var(--bs-header-padding-y); padding-bottom: var(--bs-header-padding-y); border-bottom-right-radius: var(--bs-header-border-radius);
+}
+.unal-header #section-menu-middle #name-aplication { margin: 0; font-size: .9375rem; font-weight: 700; line-height: normal; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.unal-header__separador { margin: 0 .4em; font-weight: 400; opacity: .7; }
+.unal-header #section-menu-bottom { height: var(--bs-header-bottom-height); background-color: var(--bs-header-bottom-bg); }
+
+/* ---------- Portada (estilo portal institucional) ---------- */
+.portada { background-color: var(--color-indigo); color: var(--color-blanco); }
+.portada__contenido { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: clamp(260px, 26vw, 320px); }
+.portada__texto {
+    display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 18px;
+    padding: clamp(28px, 4vw, 44px) clamp(24px, 3vw, 40px) clamp(28px, 4vw, 44px) clamp(24px, 7vw, 110px);
+}
+.portada__texto h1 { margin: 0; font-family: var(--fuente-texto); font-weight: 700; font-size: clamp(1.5rem, 2.4vw, 2rem); line-height: 1.2; letter-spacing: -.005em; }
+.portada__caja { display: inline-block; padding: 12px 20px; border-radius: 10px; background-color: #A6E1FA; color: #3B1D8E; }
+.portada__texto p { margin: 0; max-width: 520px; font-size: var(--fs-300); line-height: 1.55; color: rgba(255,255,255,.95); text-wrap: pretty; }
+.portada__boton {
+    display: inline-flex; align-items: center; gap: 10px; padding: 9px 16px; margin-top: 6px;
+    border: 1px solid var(--color-blanco); border-radius: 6px; color: var(--color-blanco); text-decoration: none;
+    font-size: var(--fs-300); font-weight: 700; line-height: 1.2; transition: background-color .2s ease, color .2s ease;
+}
+.portada__boton svg { width: 14px; height: 14px; }
+.portada__boton:hover, .portada__boton:focus-visible { background-color: var(--color-blanco); color: var(--color-indigo); }
+.portada__figura { position: relative; overflow: hidden; background-color: var(--color-violeta); border-bottom-left-radius: 48px; }
+.portada__disco { position: absolute; border-radius: 50%; }
+.portada__disco--naranja { width: 54%; aspect-ratio: 1; right: -10%; bottom: -30%; background-color: var(--color-naranja); }
+.portada__disco--amarillo { width: 18%; aspect-ratio: 1; left: 16%; top: 18%; background-color: var(--color-amarillo); }
+.portada__anillo { position: absolute; width: 28%; aspect-ratio: 1; left: 36%; top: 30%; border-radius: 50%; border: 2px solid rgba(255,255,255,.4); }
+
+.per-des__contenido {
+    width: min(var(--ancho-contenido), 100%); margin: 0 auto;
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: clamp(28px, 5vw, 72px);
+}
+.per-des__texto h3 { margin: 0; font-family: var(--fuente-titulos); font-size: var(--fs-700); font-weight: 700; line-height: 1.1; letter-spacing: -.005em; color: var(--color-amarillo); }
+.per-des__texto p { max-width: 520px; margin: 12px 0 0; font-size: var(--fs-400); font-weight: 400; line-height: 1.5; color: rgba(255,255,255,.88); text-wrap: pretty; }
+
+.boton-principal {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 12px 20px; border-radius: 10px; border: 0;
+    background-color: var(--color-coral); color: var(--color-blanco);
+    font-family: var(--fuente-texto); font-size: var(--fs-400); font-weight: 700; letter-spacing: .005em; line-height: 1; text-decoration: none;
+    box-shadow: var(--sombra); cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+}
+.boton-principal svg { width: 14px; height: 14px; }
+.boton-principal:hover, .boton-principal:focus-visible { transform: scale(1.06); box-shadow: var(--sombra-alta); }
+.boton-principal:active { transform: scale(1); opacity: .75; }
+
+/* ---------- Recorrido: una tarjeta ancha por etapa (formato donar-doc) ---------- */
+.recorrido { --recorrido-gap: clamp(36px, 5vw, 52px); display: flex; flex-direction: column; gap: var(--recorrido-gap); padding: var(--recorrido-gap) 24px clamp(48px, 6vw, 72px); background-color: var(--color-blanco-hueso); }
+.recorrido__encabezado { display: grid; grid-template-columns: 1fr; justify-items: center; row-gap: clamp(16px, 2vw, 22px); width: min(860px, 100%); margin: 0 auto; text-align: center; }
+.recorrido__titulos { max-width: 680px; padding: 0; border: 0; text-align: center; }
+.recorrido__logo-caja { display: block; width: fit-content; margin: 0 auto; padding: clamp(14px, 1.8vw, 20px) clamp(20px, 2.4vw, 30px); border-radius: 18px; background-color: var(--color-azul-marino); }
+.recorrido__logo { display: block; width: clamp(170px, 19vw, 230px); height: auto; }
+.recorrido__etiqueta {
+    display: inline-block; margin: 0 0 14px; padding: 7px 16px; border-radius: 999px;
+    background-color: var(--color-azul-marino); color: var(--color-amarillo);
+    font-size: var(--fs-200); font-weight: 600; letter-spacing: .02em;
+}
+.recorrido__encabezado h2 { margin: 0; font-family: var(--fuente-titulos); font-size: clamp(1.5rem, 2.6vw, 1.9rem); font-weight: 700; line-height: 1.12; letter-spacing: -.008em; color: var(--color-azul-marino); text-wrap: balance; }
+.recorrido__encabezado p { margin: 10px auto 0; max-width: 520px; font-size: var(--fs-300); font-weight: 400; line-height: 1.55; color: var(--color-texto-suave); text-wrap: balance; }
+.recorrido__indice {
+    display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px;
+    width: min(780px, 100%); margin: clamp(16px, 2vw, 22px) auto 0; padding: 0; list-style: none;
+}
+.recorrido__indice a { display: flex; flex-direction: column; align-items: stretch; color: var(--color-azul-marino); text-decoration: none; }
+.recorrido__indice li { position: relative; }
+.recorrido__indice li:not(:last-child)::before { content: ""; position: absolute; top: 31.25px; left: 50%; width: 100%; height: 1.5px; background-color: var(--color-azul-marino); }
+.recorrido__indice-barra { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; box-sizing: border-box; width: 64px; height: 64px; margin: 0 auto; border: .5px solid var(--color-azul-marino); border-radius: 50%; background-color: var(--c); box-shadow: 0 0 0 9px color-mix(in srgb, var(--c) 24%, var(--color-blanco-hueso)); transition: transform .2s ease; }
+.recorrido__indice-numero { position: relative; z-index: 1; font-family: var(--fuente-titulos); font-size: 1.7rem; font-weight: 700; line-height: 1; color: var(--color-blanco); }
+.etapa--1 .recorrido__indice-numero, .etapa--2 .recorrido__indice-numero { color: var(--color-azul-noche); }
+.recorrido__indice-nombre { margin-top: 24px; padding: 0 6px; font-size: var(--fs-300); font-weight: 600; line-height: 1.3; text-align: center; text-wrap: balance; }
+.recorrido__indice a:hover .recorrido__indice-barra, .recorrido__indice a:focus-visible .recorrido__indice-barra { transform: translateY(-3px); }
+.recorrido__indice a:hover .recorrido__indice-nombre, .recorrido__indice a:focus-visible .recorrido__indice-nombre { text-decoration: underline; text-underline-offset: 3px; }
+/* Franja azul de lado a lado entre el índice y las tarjetas */
+.recorrido__franja {
+    width: 100vw; margin-left: calc(50% - 50vw);
+    padding: clamp(32px, 4vw, 44px) 24px;
+    background-color: var(--color-azul-marino);
+}
+.recorrido__franja .per-des__contenido { gap: clamp(24px, 4vw, 48px); }
+.recorrido__franja .per-des__texto p { max-width: 460px; }
+.etapa {
+    --c: var(--color-amarillo); --texto-portada: var(--color-blanco); --texto-boton: var(--color-blanco);
+    width: min(var(--ancho-contenido), 100%); margin: 0 auto; overflow: hidden;
+    border-radius: var(--radio-grande); background-color: var(--color-gris);
+}
+.etapa--1 { --c: var(--color-amarillo); --c-oscuro: #CDB52F; --texto-portada: var(--color-azul-noche); --texto-boton: var(--color-azul-noche); }
+.etapa--2 { --c: var(--color-naranja); --c-oscuro: #E68A12; --texto-portada: var(--color-azul-noche); --texto-boton: var(--color-azul-noche); }
+.etapa--3 { --c: var(--color-coral); --c-oscuro: #E03B36; }
+.etapa--4 { --c: var(--color-violeta-claro); --c-oscuro: #A73FD4; }
+.etapa--5 { --c: var(--color-violeta); --c-oscuro: #6210B8; }
+.etapa--6 { --c: var(--color-indigo); --c-oscuro: #3C07A8; }
+
+.etapa__contenido { display: grid; grid-template-columns: minmax(0, 45fr) minmax(0, 55fr); }
+.etapa--espejo .etapa__contenido { grid-template-columns: minmax(0, 55fr) minmax(0, 45fr); }
+.etapa__texto { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: clamp(22px, 2.6vw, 30px) clamp(22px, 2.6vw, 30px); }
+.etapa--texto-derecha .etapa__texto { align-items: flex-end; text-align: right; }
+.etapa__texto h3 { margin: 0; font-family: var(--fuente-titulos); font-size: clamp(1.25rem, 1.9vw, 1.45rem); font-weight: 700; line-height: 1.15; letter-spacing: -.005em; color: var(--color-negro); text-wrap: balance; }
+.etapa__texto > p { max-width: 100%; margin: 10px 0 0; font-size: var(--fs-400); font-weight: 400; line-height: 1.55; color: var(--color-texto-suave); text-wrap: pretty; }
+.etapa__boton {
+    appearance: none; display: inline-flex; align-items: center; gap: 6px; width: fit-content;
+    margin-top: 20px; padding: 5px 14px 5px 5px; border: 0; border-radius: 999px;
+    background-color: var(--c); color: var(--texto-boton);
+    font-family: var(--fuente-texto); font-size: var(--fs-200); font-weight: 700; letter-spacing: .005em; line-height: 1; cursor: pointer;
+    box-shadow: var(--sombra); transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+}
+.etapa__boton:hover, .etapa__boton:focus-visible { transform: scale(1.06); box-shadow: var(--sombra-alta); }
+.etapa__boton:active { transform: scale(1); opacity: .75; }
+.etapa__boton-icono { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background-color: var(--color-blanco); }
+.etapa__boton-icono svg { width: 10px; height: 10px; --color-figura: var(--c); transition: transform .25s ease; }
+.etapa--1 .etapa__boton-icono svg, .etapa--2 .etapa__boton-icono svg { --color-figura: var(--color-azul-noche); }
+.etapa__boton[aria-expanded="true"] .etapa__boton-icono svg { transform: rotate(180deg); }
+
+.etapa__portada { min-width: 0; min-height: 220px; width: 100%; align-self: stretch; margin: 0; }
+.etapa__portada-interior {
+    position: relative; width: 100%; height: 100%; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: flex-start;
+    padding: clamp(18px, 2.4vw, 28px) clamp(20px, 2.8vw, 32px) clamp(20px, 2.8vw, 32px);
+    background-color: var(--c); color: var(--texto-portada);
+    box-shadow: var(--sombra);
+}
+.etapa:not(.etapa--espejo) .etapa__portada-interior { border-radius: 0 var(--radio-grande) var(--radio-grande) 0; }
+.etapa--espejo .etapa__portada-interior { border-radius: var(--radio-grande) 0 0 var(--radio-grande); }
+/* Formas sólidas: un disco en tono más oscuro y un anillo fino, eco de la espiral del logo */
+.etapa__portada-forma { position: absolute; z-index: 0; border-radius: 50%; pointer-events: none; }
+.etapa__portada-forma--grande { width: 60%; aspect-ratio: 1; right: -18%; bottom: -42%; background-color: var(--c-oscuro); }
+.etapa--espejo .etapa__portada-forma--grande { right: auto; left: -22%; }
+.etapa__portada-cabecera { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.etapa__portada-herramientas { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background-color: var(--color-blanco); color: var(--c-oscuro); box-shadow: 0 2px 6px rgba(6, 29, 56, 0.16); font-family: var(--fuente-texto); font-size: var(--fs-100); font-weight: 600; letter-spacing: .01em; line-height: 1; }
+.etapa--1 .etapa__portada-herramientas, .etapa--2 .etapa__portada-herramientas { color: var(--color-azul-noche); }
+
+.etapa__desplegable { padding: clamp(28px, 4vw, 44px) clamp(24px, 5vw, 56px) clamp(32px, 4.5vw, 52px); color: var(--color-azul-marino); }
+.etapa__desplegable[hidden] { display: none; }
+.etapa__desplegable-introduccion { max-width: 720px; margin: 0 auto; font-family: var(--fuente-titulos); font-style: italic; font-weight: 300; font-size: var(--fs-600); line-height: 1.35; text-align: center; text-wrap: pretty; }
+.etapa__desplegable h4 { margin: clamp(24px, 3.5vw, 36px) 0 16px; font-size: var(--fs-200); font-weight: 600; letter-spacing: .02em; color: var(--color-gris-oscuro); text-align: center; }
+.etapa__acciones { width: min(900px, 100%); margin: 0 auto; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.etapa__accion { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 16px; background-color: var(--color-blanco); font-size: var(--fs-300); font-weight: 500; line-height: 1.3; color: var(--color-azul-marino); }
+.etapa__accion::before { content: ""; flex: none; width: 14px; height: 14px; border-radius: 50%; background-color: var(--c); box-shadow: 0 0 0 3px var(--color-blanco), 0 0 0 5px var(--c); margin: 0 5px 0 4px; }
+
+/* Tableros de control: círculos en las portadas y pop-up */
+.etapa__herramientas { position: relative; z-index: 1; flex: 1; display: flex; flex-wrap: wrap; justify-content: center; align-content: center; gap: 22px 8px; padding-top: 14px; }
+.herramienta { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 108px; padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+.herramienta__circulo { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; background-color: var(--color-blanco); color: var(--c-oscuro); box-shadow: 0 0 0 5px color-mix(in srgb, var(--color-blanco) 32%, var(--c)), 0 10px 16px -10px rgba(6, 29, 56, .55); transition: transform .2s ease, box-shadow .2s ease; }
+.etapa--1 .herramienta__circulo, .etapa--2 .herramienta__circulo { color: var(--color-azul-noche); }
+.herramienta__circulo svg { width: 27px; height: 27px; }
+.herramienta__nombre { font-size: var(--fs-200); font-weight: 600; line-height: 1.25; text-align: center; text-wrap: balance; color: var(--texto-portada, var(--color-blanco)); }
+.herramienta:hover .herramienta__circulo, .herramienta:focus-visible .herramienta__circulo { transform: translateY(-3px); box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-blanco) 55%, var(--c)), 0 14px 20px -12px rgba(6, 29, 56, .6); }
+.herramienta:hover .herramienta__nombre, .herramienta:focus-visible .herramienta__nombre { text-decoration: underline; text-underline-offset: 3px; }
+.herramienta:focus-visible { outline: 3px solid var(--color-azul-noche); outline-offset: 4px; border-radius: 14px; }
+.tablero { width: min(660px, calc(100vw - 32px)); max-height: calc(100vh - 32px); margin: auto; padding: 0; border: 0; border-radius: var(--radio-grande); background-color: var(--color-blanco-hueso); color: var(--color-azul-marino); overflow: auto; }
+.tablero[open] { animation: tablero-entrada .28s var(--hero-ease); }
+@keyframes tablero-entrada { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
+.tablero::backdrop { background-color: var(--color-azul-marino); }
+.tablero__cabecera { position: relative; overflow: hidden; padding: clamp(26px, 4vw, 38px) clamp(24px, 4.5vw, 44px) clamp(28px, 4vw, 38px); background-color: var(--c); color: var(--texto-portada, var(--color-blanco)); }
+.tablero__forma { position: absolute; right: -9%; bottom: -70%; width: 48%; aspect-ratio: 1; border-radius: 50%; background-color: var(--c-oscuro); pointer-events: none; }
+.tablero__forma--pequena { right: auto; left: 56%; top: -34%; bottom: auto; width: 16%; background-color: color-mix(in srgb, var(--color-blanco) 28%, var(--c)); }
+.tablero__icono { position: relative; display: grid; place-items: center; width: 72px; height: 72px; border-radius: 50%; background-color: var(--color-blanco); color: var(--c-oscuro); box-shadow: 0 0 0 7px color-mix(in srgb, var(--color-blanco) 30%, var(--c)), 0 12px 20px -12px rgba(6, 29, 56, .6); }
+.etapa--1.tablero .tablero__icono, .etapa--2.tablero .tablero__icono { color: var(--color-azul-noche); }
+.tablero__icono svg { width: 34px; height: 34px; }
+.tablero__etiqueta { position: relative; display: inline-flex; align-items: center; height: 24px; margin: 22px 0 0; padding: 0 12px; border-radius: 999px; background-color: var(--color-blanco); color: var(--c-oscuro); font-size: var(--fs-100); font-weight: 600; box-shadow: 0 2px 6px rgba(6, 29, 56, .16); }
+.etapa--1.tablero .tablero__etiqueta, .etapa--2.tablero .tablero__etiqueta { color: var(--color-azul-noche); }
+.tablero__titulo { position: relative; max-width: 460px; margin: 12px 0 0; font-family: var(--fuente-titulos); font-size: clamp(1.45rem, 3.2vw, 2rem); font-weight: 700; line-height: 1.12; text-wrap: balance; }
+.tablero__cerrar { position: absolute; top: 14px; right: 14px; z-index: 2; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 50%; background-color: var(--color-azul-marino); color: var(--color-blanco); cursor: pointer; transition: background-color .2s ease; }
+.tablero__cerrar:hover, .tablero__cerrar:focus-visible { background-color: var(--color-violeta); }
+.tablero__cerrar svg { width: 16px; height: 16px; }
+.tablero__cuerpo { padding: clamp(24px, 4vw, 34px) clamp(24px, 4.5vw, 44px) clamp(26px, 4vw, 36px); }
+.tablero__texto { margin: 0; font-size: var(--fs-500); font-weight: 400; line-height: 1.65; color: var(--color-azul-marino); text-wrap: pretty; }
+.tablero__acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin-top: clamp(22px, 3vw, 30px); }
+.tablero__ingresar { display: inline-flex; align-items: center; gap: 12px; padding: 14px 26px; border-radius: 999px; background-color: var(--color-azul-marino); color: var(--color-blanco); font-size: var(--fs-400); font-weight: 700; text-decoration: none; box-shadow: 0 10px 18px -12px rgba(6, 29, 56, .7); transition: background-color .2s ease, transform .2s ease; }
+.tablero__ingresar svg { width: 18px; height: 18px; flex: none; }
+.tablero__ingresar:hover, .tablero__ingresar:focus-visible { background-color: var(--color-violeta); transform: translateY(-2px); }
+.tablero__nota { margin: 0; font-size: var(--fs-200); color: var(--color-gris-oscuro); }
+@media (max-width: 640px) {
+    .etapa__herramientas { gap: 18px 6px; }
+    .herramienta { width: 92px; }
+    .herramienta__circulo { width: 52px; height: 52px; }
+}
+/* Pop-up de nodos del ecosistema */
+body:has(dialog[open]) { overflow: hidden; }
+.nodos { width: min(1060px, calc(100vw - 32px)); max-height: calc(100vh - 32px); margin: auto; padding: clamp(24px, 4vw, 44px) clamp(18px, 4vw, 48px) clamp(24px, 4vw, 40px); border: 0; border-radius: var(--radio-grande); background-color: var(--color-blanco-hueso); color: var(--color-azul-noche); overflow-y: auto; }
+.nodos::backdrop { background-color: var(--color-azul-marino); }
+.nodos__cerrar { position: absolute; top: 14px; right: 14px; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 50%; background-color: var(--color-azul-marino); color: var(--color-blanco); cursor: pointer; transition: background-color .2s ease; }
+.nodos__cerrar:hover, .nodos__cerrar:focus-visible { background-color: var(--color-violeta); }
+.nodos__cerrar svg { width: 16px; height: 16px; }
+.nodos__titulo { margin: 0 auto; max-width: 760px; font-family: var(--fuente-titulos); font-size: clamp(1.4rem, 3vw, 2.1rem); font-weight: 700; line-height: 1.15; text-align: center; text-wrap: balance; color: var(--color-azul-marino); }
+.nodos__diagrama { position: relative; container-type: inline-size; width: 100%; aspect-ratio: 1800 / 980; margin-top: clamp(4px, 1vw, 12px); }
+.nodos__anillo { position: absolute; left: 51.9%; top: 40.8%; width: 35.5%; aspect-ratio: 1; translate: -50% -50%; border: 3px solid #D9C3F2; border-radius: 50%; }
+.nodos__centro { position: absolute; left: 51.9%; top: 40.8%; display: grid; place-items: center; width: 21%; aspect-ratio: 1; translate: -50% -50%; border: 2px solid #4B1A7A; border-radius: 50%; background-color: #F3F3F6; }
+.nodos__centro-interior { display: grid; place-content: center; width: 82%; aspect-ratio: 1; border: 3px solid #CDB8F0; border-radius: 50%; background-color: var(--color-blanco); text-align: center; color: #1B3A6B; }
+.nodos__corazon { display: block; width: 4.6cqw; height: auto; margin: 0 auto .4cqw; }
+.nodos__centro-interior strong { width: min-content; margin: 0 auto; font-family: var(--fuente-titulos); font-size: 1.95cqw; font-weight: 700; line-height: 1.15; }
+.nodos__centro-interior span { font-family: var(--fuente-titulos); font-size: 1.95cqw; font-weight: 700; line-height: 1.15; }
+.nodo { display: contents; }
+.nodo__burbuja { position: absolute; left: var(--x); top: var(--y); display: grid; place-items: center; width: 11.2%; aspect-ratio: 1; translate: -50% -50%; rotate: var(--giro); border-radius: 50% 50% 0 50%; background-color: var(--nc); box-shadow: 0 8px 14px -8px rgba(6, 29, 56, .55); }
+.nodo__burbuja::after { content: ""; position: absolute; right: -1%; bottom: -1%; width: 11%; aspect-ratio: 1; border-radius: 50%; background-color: var(--nc-punto, var(--nc)); box-shadow: 0 0 0 2px var(--color-blanco-hueso); }
+.nodo__disco { display: grid; place-items: center; width: 74%; aspect-ratio: 1; rotate: calc(-1 * var(--giro)); border-radius: 50%; background-color: #F6F5F8; box-shadow: inset 0 2px 5px rgba(6, 29, 56, .3); color: var(--ic); }
+.nodo__disco svg { width: 62%; height: 62%; }
+.nodo__texto { position: absolute; top: var(--ty); left: var(--tx); right: var(--tr); width: var(--tw); text-align: var(--ta, left); }
+.nodo__texto h3 { margin: 0; font-family: var(--fuente-titulos); font-size: 2.6cqw; font-weight: 700; line-height: 1.1; color: var(--color-azul-noche); }
+.nodo__texto p { margin: .5cqw 0 0; font-size: 2.05cqw; font-weight: 400; line-height: 1.25; color: var(--color-azul-marino); text-wrap: pretty; }
+.nodo--gobernanza { --x: 39.2%; --y: 12.7%; --giro: 4deg; --nc: #6210B8; --ic: #6210B8; --tr: 70%; --tt: 0; --ty: 4.9%; --tw: 26%; --ta: right; }
+.nodo--acceso { --x: 64%; --y: 13.1%; --giro: 85deg; --nc: #D98AC4; --nc-punto: #D98AC4; --ic: #8E2F86; --tx: 71.4%; --ty: 4.9%; --tw: 27%; }
+.nodo--medicion { --x: 33.2%; --y: 48.0%; --giro: -57deg; --nc: #5B52A5; --ic: #5B52A5; --tr: 73.3%; --ty: 33.8%; --tw: 25%; --ta: right; }
+.nodo--trayecto { --x: 68.6%; --y: 57.1%; --giro: 163deg; --nc: #E2BFF3; --ic: #6210B8; --nc-punto: #E2BFF3; --tx: 75.5%; --ty: 47.6%; --tw: 24%; }
+.nodo--oportunidades { --x: 47.9%; --y: 75.0%; --giro: -123deg; --nc: #F3C13F; --ic: #C99A1E; --tx: 33.6%; --ty: 84.3%; --tw: 38%; }
+.nodo--gobernanza .nodo__texto { left: auto; }
+.nodo--medicion .nodo__texto { left: auto; }
+.nodo--acceso .nodo__texto, .nodo--trayecto .nodo__texto, .nodo--oportunidades .nodo__texto { right: auto; }
+@media (max-width: 720px) {
+    .nodos__diagrama { display: flex; flex-direction: column; gap: 14px; aspect-ratio: auto; container-type: normal; margin-top: 18px; }
+    .nodos__titulo { padding: 0 30px; }
+    .nodos__anillo { display: none; }
+    .nodos__centro { position: static; width: 168px; margin: 0 auto 6px; translate: none; }
+    .nodos__corazon { width: 44px; margin-bottom: 4px; }
+    .nodos__centro-interior strong { font-size: .85rem; }
+    .nodos__centro-interior span { font-size: .85rem; }
+    .nodo { display: flex; align-items: center; gap: 16px; padding: 12px 14px; border-radius: 18px; background-color: var(--color-blanco); }
+    .nodo__burbuja { position: static; flex: none; width: 64px; translate: none; box-shadow: none; }
+    .nodo__texto { position: static; width: auto; text-align: left; }
+    .nodo__texto h3 { font-size: 1.1rem; }
+    .nodo__texto p { margin-top: 3px; font-size: .9rem; }
+}
+@media (max-width: 1000px) {
+    .recorrido { gap: 42px; padding: 54px 22px 64px; }
+    .etapa { border-radius: 30px; }
+    .etapa__contenido, .etapa--espejo .etapa__contenido { grid-template-columns: 1fr; aspect-ratio: auto; }
+    .etapa__texto, .etapa--texto-derecha .etapa__texto { align-items: flex-start; padding: clamp(32px, 8vw, 50px); text-align: left; }
+    .etapa--espejo .etapa__texto { order: 1; }
+    .etapa--espejo .etapa__portada { order: 2; }
+    .etapa__portada { aspect-ratio: auto; min-height: clamp(170px, 30vw, 230px); }
+    .etapa:not(.etapa--espejo) .etapa__portada-interior, .etapa--espejo .etapa__portada-interior { border-radius: 0 0 30px 30px; }
+    .etapa__portada-forma--grande, .etapa--espejo .etapa__portada-forma--grande { width: 46%; right: -14%; left: auto; bottom: -40%; }
+}
+@media (max-width: 640px) {
+    .recorrido { padding-left: 16px; padding-right: 16px; }
+    .recorrido__indice { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px 6px; }
+    .recorrido__indice li::before { display: none; }
+    .recorrido__indice-barra { width: 60px; height: 60px; }
+    .recorrido__indice-nombre { margin-top: 10px; font-size: var(--fs-200); }
+    .etapa { border-radius: 24px; }
+    .etapa:not(.etapa--espejo) .etapa__portada-interior, .etapa--espejo .etapa__portada-interior { border-radius: 0 0 24px 24px; }
+    .etapa__texto { padding: 32px 24px 34px; }
+    .etapa__texto > p { font-size: var(--fs-300); }
+    .etapa__texto h3 { font-size: clamp(1.7rem, 7vw, 2rem); }
+    .etapa__desplegable { padding: 34px 24px 44px; }
+}
+
+
+/* ---------- Portada y llamado a la acción en pantallas angostas ---------- */
+@media (max-width: 720px) {
+    .unal-header #section-menu-middle #name-aplication { white-space: normal; font-size: .85rem; line-height: 1.3; }
+    .portada__contenido { grid-template-columns: 1fr; }
+    .portada__texto { padding: 28px 20px 30px; }
+    .portada__figura { min-height: 150px; border-bottom-left-radius: 0; }
+    .portada__boton { width: 100%; justify-content: center; }
+    .per-des__contenido { grid-template-columns: 1fr; justify-items: start; gap: 24px; }
+    .boton-principal { width: 100%; }
+}
+
+/* ---------- Aplicativos: dos tarjetas con portada de color ---------- */
+.aplicativos { width: 100vw; margin-left: calc(50% - 50vw); margin-bottom: calc(-1 * var(--recorrido-gap)); padding: clamp(36px, 4.5vw, 56px) 24px clamp(44px, 5.5vw, 64px); background-color: var(--color-blanco); }
+.aplicativos__encabezado { max-width: 640px; margin: 0 auto; text-align: center; }
+.aplicativos__encabezado .recorrido__etiqueta { margin-bottom: 14px; }
+.aplicativos__encabezado h2 { margin: 0; font-family: var(--fuente-titulos); font-size: clamp(1.5rem, 2.6vw, 1.9rem); font-weight: 700; line-height: 1.12; letter-spacing: -.008em; color: var(--color-azul-marino); text-wrap: balance; }
+.aplicativos__encabezado p { margin: 10px auto 0; max-width: 520px; font-size: var(--fs-400); line-height: 1.5; color: var(--color-texto-suave); text-wrap: pretty; }
+.aplicativos__lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 2.5vw, 24px); width: min(620px, 100%); margin: clamp(22px, 3vw, 30px) auto 0; }
+.aplicativo { --c: var(--color-coral); --c-oscuro: #E03B36; --texto-portada: var(--color-blanco); --texto-boton: var(--color-blanco); display: flex; flex-direction: column; overflow: hidden; border-radius: 20px; background-color: var(--color-gris); }
+.aplicativo--asistencia, .aplicativo--sat { --c: var(--color-azul-marino); --c-oscuro: var(--color-azul-noche); }
+.aplicativo__portada { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 8px; min-height: 104px; padding: 16px clamp(16px, 2vw, 22px); background-color: var(--c); color: var(--texto-portada); }
+.aplicativo__icono { position: relative; flex: 0 0 auto; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background-color: var(--color-blanco); color: var(--c-oscuro); }
+.aplicativo__icono svg { width: 22px; height: 22px; }
+.aplicativo__rotulo { position: relative; font-size: var(--fs-200); font-weight: 600; letter-spacing: .02em; opacity: .95; }
+.aplicativo__cuerpo { display: flex; flex-direction: column; align-items: flex-start; flex: 1; padding: clamp(16px, 2vw, 22px); }
+.aplicativo h3 { margin: 0; font-family: var(--fuente-titulos); font-size: clamp(1.1rem, 1.5vw, 1.2rem); font-weight: 700; line-height: 1.15; color: var(--color-negro); }
+.aplicativo__sigla { display: block; margin-top: 4px; font-family: var(--fuente-texto); font-size: var(--fs-300); font-weight: 500; color: var(--color-gris-oscuro); }
+.aplicativo__cuerpo p { margin: 8px 0 16px; font-size: var(--fs-200); line-height: 1.5; color: var(--color-texto-suave); text-wrap: pretty; }
+.aplicativo__boton { margin-top: auto; padding-top: 0; text-decoration: none; }
+.aplicativo__cuerpo p + .aplicativo__boton { margin-top: auto; }
+.aplicativo__boton .etapa__boton-icono { color: var(--c-oscuro); }
+.aplicativo__boton .etapa__boton-icono svg { width: 11px; height: 11px; transform: none; }
+@media (max-width: 720px) {
+    .aplicativos { padding-left: 16px; padding-right: 16px; }
+    .aplicativos__lista { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+
+<svg id="svg-sprites" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<symbol id="icono-flecha-abajo" viewBox="0 0 20 20" fill="var(--color-figura)"><path d="M1 1L19 1L10 19L1 1Z" stroke="var(--color-figura)" stroke-width="1" stroke-linejoin="round"/></symbol>
+<symbol id="icono-asistencia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 3.5v2M16 3.5v2M4 9h16"/><path d="m8.5 15 2.3 2.3 4.7-4.8"/></symbol>
+<symbol id="icono-alerta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.6 2H4.4z"/><path d="M10 20a2 2 0 0 0 4 0"/><path d="M12 2.5v1.5"/></symbol>
+<symbol id="icono-flecha" viewBox="0 0 20 20" fill="var(--color-figura)"><path d="M1 1L19 1L10 19L1 1Z" stroke="var(--color-figura)" stroke-width="1" stroke-linejoin="round"/></symbol>
+<symbol id="icono-desercion" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l6 6 4-4 8 8"/><path d="M21 11v5h-5"/></symbol>
+<symbol id="icono-perdida" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M17.5 5.5l4 4M21.5 5.5l-4 4"/></symbol>
+<symbol id="icono-caracterizacion" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 19.5c0-3.4 2.8-5.5 6.5-5.5s6.5 2.1 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17.5 14c2.5.1 4.5 1.8 4.5 4.5"/></symbol>
+<symbol id="icono-resultados" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="12" width="3.5" height="8" rx=".6"/><rect x="10.2" y="7" width="3.5" height="13" rx=".6"/><rect x="16.5" y="3.5" width="3.5" height="16.5" rx=".6"/><path d="M3 21.5h18"/></symbol>
+<symbol id="icono-trayectorias" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/><path d="M7 19h6a3.5 3.5 0 0 0 0-7h-2a3.5 3.5 0 0 1 0-7h6"/></symbol>
+<symbol id="icono-programacion" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="17" rx="2.5"/><path d="M8 2.5v3M16 2.5v3M4 9.5h16M8 13h3M13 13h3M8 17h3"/></symbol>
+<symbol id="icono-etapa-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.6-4.6"/><path d="M8 11h6M11 8v6"/></symbol>
+<symbol id="icono-etapa-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10l8-6 8 6v10"/><path d="M9 20v-6h6v6"/><path d="M2 20h20"/></symbol>
+<symbol id="icono-etapa-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h13"/><path d="M12 7l5 5-5 5"/><path d="M20 4v16"/></symbol>
+<symbol id="icono-etapa-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-6 4 4 5-8 4 5"/><circle cx="8" cy="11" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="15" r="1.4" fill="currentColor" stroke="none"/><circle cx="17" cy="7" r="1.4" fill="currentColor" stroke="none"/></symbol>
+<symbol id="icono-etapa-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/></symbol>
+<symbol id="icono-etapa-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></symbol>
+</svg>
+
+
+<header class="unal-header">
+    <div class="section-icon">
+        <div class="banner-container">
+            <a href="https://unal.edu.co/" target="_blank" rel="noopener" class="icon-link">
+                <img src="https://gestionapp.medellin.unal.edu.co/cdn/assets/images/logo_unal_circle.png" alt="Escudo de la Universidad Nacional de Colombia">
+            </a>
+        </div>
+    </div>
+    <div id="divider-top"></div>
+    <div id="section-menu-middle">
+        <div class="padded-container">
+            <p id="name-aplication">Proyecto Permanencia <span class="unal-header__separador">|</span> Nodo de Medición, Evaluación e Innovación</p>
+        </div>
+    </div>
+    <div id="section-menu-bottom"></div>
+</header>
+
+<main id="inicio">
+    <!-- ===== Portada (estilo portal institucional) ===== -->
+    <section class="portada" aria-labelledby="portada__titulo">
+        <div class="portada__contenido">
+            <div class="portada__texto">
+                <h1 id="portada__titulo"><span class="portada__caja">Proyecto Permanencia</span></h1>
+                <p>Ecosistema que articula las capacidades de las dependencias de la Sede Medellín para acompañar las trayectorias estudiantiles, desde el acceso hasta la graduación y el egreso. Su modelo analítico de datos reúne los datos disponibles para consulta sobre cada etapa.</p>
+                <a class="portada__boton" href="#nodos-ecosistema" role="button" aria-haspopup="dialog" data-abrir-nodos>Explorar los nodos del Ecosistema
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+            </div>
+            <div class="portada__figura" aria-hidden="true">
+                <span class="portada__disco portada__disco--naranja"></span>
+                <span class="portada__disco portada__disco--amarillo"></span>
+                <span class="portada__anillo"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== La trayectoria de un estudiante: una tarjeta por etapa ===== -->
+    <section class="recorrido" id="recorrido" aria-labelledby="recorrido__titulo">
+        <div class="recorrido__encabezado">
+            <div class="recorrido__logo-caja"><img class="recorrido__logo" src="imagenes/logo-proyecto-permanencia.webp" alt="Logo del Proyecto Permanencia UNAL: Construimos contigo" width="2000" height="876"></div>
+            <div class="recorrido__titulos">
+                <h2 id="recorrido__titulo">Datos disponibles por etapa</h2>
+                <p>El modelo analítico organiza los datos en seis etapas de la trayectoria estudiantil.</p>
+            </div>
+            <ol class="recorrido__indice" aria-label="Índice de etapas">
+                <li class="etapa--1"><a href="#etapa-titulo-1"><span class="recorrido__indice-barra"><span class="recorrido__indice-numero" aria-hidden="true">1</span></span><span class="recorrido__indice-nombre">Acceso potencial</span></a></li>
+                <li class="etapa--2"><a href="#etapa-titulo-2"><span class="recorrido__indice-barra"><span class="recorrido__indice-numero" aria-hidden="true">2</span></span><span class="recorrido__indice-nombre">Aspiración, inscripción y admisión</span></a></li>
+                <li class="etapa--3"><a href="#etapa-titulo-3"><span class="recorrido__indice-barra"><span class="recorrido__indice-numero" aria-hidden="true">3</span></span><span class="recorrido__indice-nombre">Transición e ingreso</span></a></li>
+                <li class="etapa--4"><a href="#etapa-titulo-4"><span class="recorrido__indice-barra"><span class="recorrido__indice-numero" aria-hidden="true">4</span></span><span class="recorrido__indice-nombre">Trayectoria y permanencia</span></a></li>
+                <li class="etapa--5"><a href="#etapa-titulo-5"><span class="recorrido__indice-barra"><span class="recorrido__indice-numero" aria-hidden="true">5</span></span><span class="recorrido__indice-nombre">Graduación y transición</span></a></li>
+                <li class="etapa--6"><a href="#etapa-titulo-6"><span class="recorrido__indice-barra"><span class="recorrido__indice-numero" aria-hidden="true">6</span></span><span class="recorrido__indice-nombre">Egresados e impacto</span></a></li>
+            </ol>
+        </div>
+
+        <!-- Aplicativos: debajo de la gráfica de las seis etapas -->
+        <div class="aplicativos" aria-labelledby="aplicativos__titulo">
+            <div class="aplicativos__encabezado">
+                <h2 id="aplicativos__titulo">Herramientas de acompañamiento</h2>
+                <p>Dos aplicativos que producen y permiten consultar datos del modelo analítico a lo largo de la trayectoria.</p>
+            </div>
+            <div class="aplicativos__lista">
+                <article class="aplicativo aplicativo--asistencia" aria-labelledby="aplicativo-titulo-asistencia">
+                    <div class="aplicativo__portada">
+                        <span class="aplicativo__icono" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icono-asistencia"></use></svg></span>
+                        <span class="aplicativo__rotulo">Aplicativo</span>
+                    </div>
+                    <div class="aplicativo__cuerpo">
+                        <h3 id="aplicativo-titulo-asistencia">Toma de asistencia</h3>
+                        <p>Registro de asistencia a clases y actividades académicas: datos de presencia por estudiante, asignatura y periodo.</p>
+                        <a class="etapa__boton aplicativo__boton" href="https://controlasistenciadev.medellin.unal.edu.co/login?returnTo=%2Freuniones" target="_blank" rel="noopener noreferrer">
+                            <span class="etapa__boton-icono" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                            Ingresar
+                        </a>
+                    </div>
+                </article>
+                <article class="aplicativo aplicativo--sat" aria-labelledby="aplicativo-titulo-sat">
+                    <div class="aplicativo__portada">
+                        <span class="aplicativo__icono" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icono-alerta"></use></svg></span>
+                        <span class="aplicativo__rotulo">Aplicativo</span>
+                    </div>
+                    <div class="aplicativo__cuerpo">
+                        <h3 id="aplicativo-titulo-sat">SAT <span class="aplicativo__sigla">Sistema de Alertas Tempranas</span></h3>
+                        <p>Consulta de alertas por riesgo académico, socioeconómico, psicosocial o administrativo, por estudiante, cohorte y programa.</p>
+                        <a class="etapa__boton aplicativo__boton" href="#"><!-- URL del SAT, pendiente -->
+                            <span class="etapa__boton-icono" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                            Ingresar
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <div class="recorrido__franja">
+            <div class="per-des__contenido">
+                <div class="per-des__texto">
+                    <h3>¿Quieres conocer el recorrido?</h3>
+                    <p>Explora las seis etapas que recorre un estudiante y los datos e información que describen cada una.</p>
+                </div>
+                <a class="boton-principal" href="#etapa-titulo-1">Explorar las etapas
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+            </div>
+        </div>
+
+        <article class="etapa etapa--1" aria-labelledby="etapa-titulo-1">
+            <div class="etapa__contenido">
+                <div class="etapa__texto">
+                    <h3 id="etapa-titulo-1">Acceso potencial</h3>
+                    <p>Etapa previa al ingreso. Comprende a la población que podría llegar a la Universidad y las condiciones del territorio que inciden en su tránsito a la educación superior.</p>
+                    <button class="etapa__boton" type="button" aria-expanded="false" aria-controls="etapa-detalle-1" data-desplegar>
+                        <span class="etapa__boton-icono" aria-hidden="true"><svg><use href="#icono-flecha"></use></svg></span>
+                        Seguir leyendo
+                    </button>
+                </div>
+                <figure class="etapa__portada">
+                    <div class="etapa__portada-interior">
+                        <span class="etapa__portada-forma etapa__portada-forma--grande" aria-hidden="true"></span>
+                        <div class="etapa__portada-cabecera">
+                            <span class="etapa__portada-herramientas">Herramientas</span>
+                        </div>
+                    </div>
+                </figure>
+            </div>
+            <div id="etapa-detalle-1" class="etapa__desplegable" data-contenido hidden>
+                <p class="etapa__desplegable-introduccion">Información de contexto y territorio para dimensionar la población con potencial de acceso y las condiciones de su tránsito a la educación superior.</p>
+                <h4>Datos disponibles para consulta</h4>
+                <ul class="etapa__acciones">
+                    <li class="etapa__accion">Población potencial</li>
+                    <li class="etapa__accion">Instituciones educativas de origen</li>
+                    <li class="etapa__accion">Resultados Saber 11</li>
+                    <li class="etapa__accion">Tránsito inmediato a educación superior</li>
+                    <li class="etapa__accion">Demanda territorial</li>
+                    <li class="etapa__accion">Capacidad de absorción</li>
+                    <li class="etapa__accion">Brechas de acceso</li>
+                    <li class="etapa__accion">Estudiantes de primera generación</li>
+                </ul>
+            </div>
+        </article>
+
+        <article class="etapa etapa--2 etapa--espejo etapa--texto-derecha" aria-labelledby="etapa-titulo-2">
+            <div class="etapa__contenido">
+                <figure class="etapa__portada">
+                    <div class="etapa__portada-interior">
+                        <span class="etapa__portada-forma etapa__portada-forma--grande" aria-hidden="true"></span>
+                        <div class="etapa__portada-cabecera">
+                            <span class="etapa__portada-herramientas">Herramientas</span>
+                        </div>
+                    </div>
+                </figure>
+                <div class="etapa__texto">
+                    <h3 id="etapa-titulo-2">Aspiración, inscripción y admisión</h3>
+                    <p>Proceso que va de la aspiración a la matrícula. Comprende la inscripción, la selección y la admisión de los aspirantes a los programas de la Sede.</p>
+                    <button class="etapa__boton" type="button" aria-expanded="false" aria-controls="etapa-detalle-2" data-desplegar>
+                        <span class="etapa__boton-icono" aria-hidden="true"><svg><use href="#icono-flecha"></use></svg></span>
+                        Seguir leyendo
+                    </button>
+                </div>
+            </div>
+            <div id="etapa-detalle-2" class="etapa__desplegable" data-contenido hidden>
+                <p class="etapa__desplegable-introduccion">Información del embudo de admisión, desde la aspiración hasta la matrícula, y del perfil con el que llegan los admitidos.</p>
+                <h4>Datos disponibles para consulta</h4>
+                <ul class="etapa__acciones">
+                    <li class="etapa__accion">Aspirantes</li>
+                    <li class="etapa__accion">Compra de PIN</li>
+                    <li class="etapa__accion">Inscripción</li>
+                    <li class="etapa__accion">Persistencia en la inscripción</li>
+                    <li class="etapa__accion">Programa de interés declarado</li>
+                    <li class="etapa__accion">Territorialización</li>
+                    <li class="etapa__accion">Puntaje de admisión</li>
+                    <li class="etapa__accion">Admitidos</li>
+                    <li class="etapa__accion">Conversión aspirante, admitido y matriculado</li>
+                </ul>
+            </div>
+        </article>
+
+        <article class="etapa etapa--3" aria-labelledby="etapa-titulo-3">
+            <div class="etapa__contenido">
+                <div class="etapa__texto">
+                    <h3 id="etapa-titulo-3">Transición e ingreso</h3>
+                    <p>Primer año en la Universidad. Comprende la formalización de la matrícula, la caracterización de quienes ingresan y su adaptación académica y social.</p>
+                    <button class="etapa__boton" type="button" aria-expanded="false" aria-controls="etapa-detalle-3" data-desplegar>
+                        <span class="etapa__boton-icono" aria-hidden="true"><svg><use href="#icono-flecha"></use></svg></span>
+                        Seguir leyendo
+                    </button>
+                </div>
+                <figure class="etapa__portada">
+                    <div class="etapa__portada-interior">
+                        <span class="etapa__portada-forma etapa__portada-forma--grande" aria-hidden="true"></span>
+                        <div class="etapa__portada-cabecera">
+                            <span class="etapa__portada-herramientas">Herramientas</span>
+                        </div>
+                        <div class="etapa__herramientas" role="group" aria-label="Tableros de control de la etapa">
+                            <button type="button" class="herramienta" data-tablero="caracterizacion" aria-haspopup="dialog"><span class="herramienta__circulo"><svg aria-hidden="true"><use href="#icono-caracterizacion"></use></svg></span><span class="herramienta__nombre">Caracterización estudiantil</span></button>
+                        </div>
+                    </div>
+                </figure>
+            </div>
+            <div id="etapa-detalle-3" class="etapa__desplegable" data-contenido hidden>
+                <p class="etapa__desplegable-introduccion">Información de caracterización del ingreso y de las estrategias de adaptación del primer año.</p>
+                <h4>Datos disponibles para consulta</h4>
+                <ul class="etapa__acciones">
+                    <li class="etapa__accion">Formalización de matrícula</li>
+                    <li class="etapa__accion">Caracterización integral de ingreso</li>
+                    <li class="etapa__accion">Perfil epidemiológico</li>
+                    <li class="etapa__accion">Puntaje básico de matrícula (PBM)</li>
+                    <li class="etapa__accion">Inducción</li>
+                    <li class="etapa__accion">Nivelación</li>
+                    <li class="etapa__accion">Preparación académica</li>
+                    <li class="etapa__accion">Factores de riesgo y protectores</li>
+                </ul>
+            </div>
+        </article>
+
+        <article class="etapa etapa--4 etapa--espejo etapa--texto-derecha" aria-labelledby="etapa-titulo-4">
+            <div class="etapa__contenido">
+                <figure class="etapa__portada">
+                    <div class="etapa__portada-interior">
+                        <span class="etapa__portada-forma etapa__portada-forma--grande" aria-hidden="true"></span>
+                        <div class="etapa__portada-cabecera">
+                            <span class="etapa__portada-herramientas">Herramientas</span>
+                        </div>
+                        <div class="etapa__herramientas" role="group" aria-label="Tableros de control de la etapa">
+                            <button type="button" class="herramienta" data-tablero="alertas" aria-haspopup="dialog"><span class="herramienta__circulo"><svg aria-hidden="true"><use href="#icono-alerta"></use></svg></span><span class="herramienta__nombre">Alertas tempranas</span></button>
+                            <button type="button" class="herramienta" data-tablero="spadies" aria-haspopup="dialog"><span class="herramienta__circulo"><svg aria-hidden="true"><use href="#icono-desercion"></use></svg></span><span class="herramienta__nombre">Deserción (SPADIES)</span></button>
+                            <button type="button" class="herramienta" data-tablero="perdida" aria-haspopup="dialog"><span class="herramienta__circulo"><svg aria-hidden="true"><use href="#icono-perdida"></use></svg></span><span class="herramienta__nombre">Pérdida de calidad de estudiante</span></button>
+                            <button type="button" class="herramienta" data-tablero="programacion" aria-haspopup="dialog"><span class="herramienta__circulo"><svg aria-hidden="true"><use href="#icono-programacion"></use></svg></span><span class="herramienta__nombre">Programación académica</span></button>
+                            <button type="button" class="herramienta" data-tablero="resultados" aria-haspopup="dialog"><span class="herramienta__circulo"><svg aria-hidden="true"><use href="#icono-resultados"></use></svg></span><span class="herramienta__nombre">Resultados académicos</span></button>
+                            <button type="button" class="herramienta" data-tablero="trayectorias" aria-haspopup="dialog"><span class="herramienta__circulo"><svg aria-hidden="true"><use href="#icono-trayectorias"></use></svg></span><span class="herramienta__nombre">Trayectorias académicas</span></button>
+                        </div>
+                    </div>
+                </figure>
+                <div class="etapa__texto">
+                    <h3 id="etapa-titulo-4">Trayectoria y permanencia</h3>
+                    <p>Desarrollo del plan de estudios semestre a semestre. Comprende el avance académico, la participación en los acompañamientos y las situaciones que afectan la continuidad.</p>
+                    <button class="etapa__boton" type="button" aria-expanded="false" aria-controls="etapa-detalle-4" data-desplegar>
+                        <span class="etapa__boton-icono" aria-hidden="true"><svg><use href="#icono-flecha"></use></svg></span>
+                        Seguir leyendo
+                    </button>
+                </div>
+            </div>
+            <div id="etapa-detalle-4" class="etapa__desplegable" data-contenido hidden>
+                <p class="etapa__desplegable-introduccion">Información académica, de bienestar y de alertas tempranas para el seguimiento de cada cohorte.</p>
+                <h4>Datos disponibles para consulta</h4>
+                <ul class="etapa__acciones">
+                    <li class="etapa__accion">Matrícula</li>
+                    <li class="etapa__accion">Créditos inscritos y aprobados</li>
+                    <li class="etapa__accion">Rendimiento académico</li>
+                    <li class="etapa__accion">Progreso curricular</li>
+                    <li class="etapa__accion">Rezago y repitencia</li>
+                    <li class="etapa__accion">Cancelaciones y aplazamientos</li>
+                    <li class="etapa__accion">Cambio de programa</li>
+                    <li class="etapa__accion">Movilidad</li>
+                    <li class="etapa__accion">Investigación, extensión y monitorías</li>
+                    <li class="etapa__accion">Bienestar y acompañamiento</li>
+                    <li class="etapa__accion">Alertas tempranas</li>
+                </ul>
+            </div>
+        </article>
+
+        <article class="etapa etapa--5" aria-labelledby="etapa-titulo-5">
+            <div class="etapa__contenido">
+                <div class="etapa__texto">
+                    <h3 id="etapa-titulo-5">Graduación y transición</h3>
+                    <p>Cierre de la trayectoria académica. Comprende el cumplimiento de los requisitos de grado y el paso hacia la vida laboral o el posgrado.</p>
+                    <button class="etapa__boton" type="button" aria-expanded="false" aria-controls="etapa-detalle-5" data-desplegar>
+                        <span class="etapa__boton-icono" aria-hidden="true"><svg><use href="#icono-flecha"></use></svg></span>
+                        Seguir leyendo
+                    </button>
+                </div>
+                <figure class="etapa__portada">
+                    <div class="etapa__portada-interior">
+                        <span class="etapa__portada-forma etapa__portada-forma--grande" aria-hidden="true"></span>
+                        <div class="etapa__portada-cabecera">
+                            <span class="etapa__portada-herramientas">Herramientas</span>
+                        </div>
+                    </div>
+                </figure>
+            </div>
+            <div id="etapa-detalle-5" class="etapa__desplegable" data-contenido hidden>
+                <p class="etapa__desplegable-introduccion">Información sobre la graduación y las primeras transiciones al trabajo o al posgrado.</p>
+                <h4>Datos disponibles para consulta</h4>
+                <ul class="etapa__acciones">
+                    <li class="etapa__accion">Candidatos a grado</li>
+                    <li class="etapa__accion">Tiempo hasta la graduación</li>
+                    <li class="etapa__accion">Graduación oportuna</li>
+                    <li class="etapa__accion">Modalidad de grado</li>
+                    <li class="etapa__accion">Desempeño de egreso</li>
+                    <li class="etapa__accion">Continuidad a posgrado</li>
+                    <li class="etapa__accion">Inserción laboral</li>
+                    <li class="etapa__accion">Correspondencia entre formación y ocupación</li>
+                </ul>
+            </div>
+        </article>
+
+        <article class="etapa etapa--6 etapa--espejo etapa--texto-derecha" aria-labelledby="etapa-titulo-6">
+            <div class="etapa__contenido">
+                <figure class="etapa__portada">
+                    <div class="etapa__portada-interior">
+                        <span class="etapa__portada-forma etapa__portada-forma--grande" aria-hidden="true"></span>
+                        <div class="etapa__portada-cabecera">
+                            <span class="etapa__portada-herramientas">Herramientas</span>
+                        </div>
+                    </div>
+                </figure>
+                <div class="etapa__texto">
+                    <h3 id="etapa-titulo-6">Egresados e impacto</h3>
+                    <p>Vida profesional de los graduados. Comprende su vinculación laboral, su continuidad formativa y el impacto que generan en la sociedad.</p>
+                    <button class="etapa__boton" type="button" aria-expanded="false" aria-controls="etapa-detalle-6" data-desplegar>
+                        <span class="etapa__boton-icono" aria-hidden="true"><svg><use href="#icono-flecha"></use></svg></span>
+                        Seguir leyendo
+                    </button>
+                </div>
+            </div>
+            <div id="etapa-detalle-6" class="etapa__desplegable" data-contenido hidden>
+                <p class="etapa__desplegable-introduccion">Información de seguimiento a egresados que cierra el ciclo y retroalimenta las etapas anteriores.</p>
+                <h4>Datos disponibles para consulta</h4>
+                <ul class="etapa__acciones">
+                    <li class="etapa__accion">Vinculación laboral</li>
+                    <li class="etapa__accion">Tiempo de vinculación</li>
+                    <li class="etapa__accion">Sector económico</li>
+                    <li class="etapa__accion">Trabajo en la UNAL</li>
+                    <li class="etapa__accion">Continuidad en posgrados</li>
+                    <li class="etapa__accion">Becas (MEN, Colfuturo)</li>
+                    <li class="etapa__accion">Cargos públicos</li>
+                    <li class="etapa__accion">Desempeño en prácticas</li>
+                    <li class="etapa__accion">Trayectorias profesionales</li>
+                    <li class="etapa__accion">Impacto territorial y social</li>
+                </ul>
+            </div>
+        </article>
+    </section>
+
+</main>
+
+<!-- Pie de página institucional (kit de diseño UNAL) -->
+<footer class="unal-footer">
+    <p class="copyright">© Copyright 2026 - Algunos Derechos Reservados</p>
+    <div class="info-help">
+        <p class="dependency">Vicerrectoría Sede Medellín</p>
+        <div class="vr"></div>
+        <a class="help-link" href="https://gestionservicios.unal.edu.co/asmscustomer/index.html#/" target="_blank" rel="noopener">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a9 9 0 0 0-9 9v3.5A2.5 2.5 0 0 0 5.5 17H7v-6H5a7 7 0 0 1 14 0h-2v6h1.5a2.5 2.5 0 0 0 2.5-2.5V11a9 9 0 0 0-9-9z" fill="currentColor"/><path d="M12 7.5a3 3 0 0 0-3 3h1.6a1.4 1.4 0 1 1 2.1 1.2c-.6.4-1.3.9-1.3 1.9v.6h1.6v-.5c0-.4.3-.7.8-1a2.9 2.9 0 0 0 1.2-2.2 3 3 0 0 0-3-3zM11.2 15.6h1.6v1.6h-1.6z" fill="currentColor"/></svg>
+            <span class="text-decoration-underline">¿Necesitas ayuda?</span>
+        </a>
+    </div>
+    <div class="more-info">
+        <p>Versión 29102026</p>
+        <div class="vr"></div>
+        <p><a href="https://unal.edu.co/proteccion-de-datos-personales" target="_blank" rel="noopener">Tratamiento de Datos Personales</a></p>
+    </div>
+</footer>
+
+
+<dialog class="tablero" id="tablero-dialogo" aria-labelledby="tablero__titulo">
+    <button type="button" class="tablero__cerrar" data-cerrar-tablero aria-label="Cerrar">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="tablero__cabecera">
+        <span class="tablero__forma" aria-hidden="true"></span>
+        <span class="tablero__forma tablero__forma--pequena" aria-hidden="true"></span>
+        <div class="tablero__icono"><svg aria-hidden="true" data-tablero-icono><use href="#icono-resultados"></use></svg></div>
+        <p class="tablero__etiqueta">Tablero de control</p>
+        <h2 class="tablero__titulo" id="tablero__titulo"></h2>
+    </div>
+    <div class="tablero__cuerpo">
+        <p class="tablero__texto" data-tablero-texto></p>
+        <div class="tablero__acciones">
+            <a class="tablero__ingresar" href="#" target="_blank" rel="noopener noreferrer" data-tablero-enlace>Ingresar al tablero
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <p class="tablero__nota">Se abre en una pestaña nueva</p>
+        </div>
+    </div>
+</dialog>
+
+<dialog class="nodos" id="nodos-ecosistema" aria-labelledby="nodos__titulo">
+    <button type="button" class="nodos__cerrar" data-cerrar-nodos aria-label="Cerrar">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <h2 class="nodos__titulo" id="nodos__titulo">Nodos, actores y relaciones de complementariedad</h2>
+    <div class="nodos__diagrama">
+        <div class="nodos__anillo" aria-hidden="true"></div>
+        <div class="nodos__centro"><div class="nodos__centro-interior"><img class="nodos__corazon" src="imagenes/corazon-permanencia.webp" alt="" width="713" height="752"><strong>Modelo Ecosistémico</strong><span>Permanencia</span></div></div>
+            <div class="nodo nodo--gobernanza">
+                <div class="nodo__burbuja"><div class="nodo__disco"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="24" r="4"/><circle cx="24" cy="24" r="12"/><path d="M24 6v12M24 30v12M6 24h12M30 24h12M11 11l8 8M29 29l8 8M37 11l-8 8M19 29l-8 8"/><circle cx="24" cy="5" r="1.6"/><circle cx="24" cy="43" r="1.6"/><circle cx="5" cy="24" r="1.6"/><circle cx="43" cy="24" r="1.6"/></svg></div></div>
+                <div class="nodo__texto"><h3>Gobernanza</h3><p>Dirige, articula y orienta estratégicamente el ecosistema institucional</p></div>
+            </div>
+            <div class="nodo nodo--acceso">
+                <div class="nodo__burbuja"><div class="nodo__disco"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 42V8l22-3v37"/><path d="M6 42h36"/><circle cx="28" cy="25" r="1.4"/><path d="M32 42V8"/></svg></div></div>
+                <div class="nodo__texto"><h3>Acceso</h3><p>Facilita el ingreso y la transición efectiva a la vida universitaria y profesional.</p></div>
+            </div>
+            <div class="nodo nodo--medicion">
+                <div class="nodo__burbuja"><div class="nodo__disco"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 40V6"/><path d="M6 40h22"/><rect x="10" y="28" width="6" height="12"/><rect x="19" y="20" width="6" height="20"/><path d="M8 20l9-8 6 4 9-9M27 7h5v5"/><circle cx="35" cy="32" r="7"/><path d="M40 37l6 6"/></svg></div></div>
+                <div class="nodo__texto"><h3>Medición e innovación</h3><p>Transforma datos, información y conocimiento para la mejora continua y apoyo a la toma de decisiones</p></div>
+            </div>
+            <div class="nodo nodo--trayecto">
+                <div class="nodo__burbuja"><div class="nodo__disco"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M33 4a6 6 0 0 1 6 6c0 5-6 11-6 11s-6-6-6-11a6 6 0 0 1 6-6z"/><circle cx="33" cy="10" r="2"/><path d="M13 24a6 6 0 0 1 6 6c0 5-6 12-6 12s-6-7-6-12a6 6 0 0 1 6-6z"/><circle cx="13" cy="30" r="2"/><circle cx="35" cy="37" r="7"/><path d="M38 33l-5 8-1-3-3-1z"/><path d="M21 42h5" stroke-dasharray="2 3"/></svg></div></div>
+                <div class="nodo__texto"><h3>Trayecto</h3><p>Fortalece el aprendizaje y brinda acompañamiento constante a las trayectorias educativas</p></div>
+            </div>
+            <div class="nodo nodo--oportunidades">
+                <div class="nodo__burbuja"><div class="nodo__disco"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="26" r="4"/><circle cx="24" cy="8" r="3.5"/><circle cx="8" cy="19" r="3.5"/><circle cx="40" cy="19" r="3.5"/><circle cx="12" cy="40" r="3.5"/><circle cx="36" cy="40" r="3.5"/><path d="M24 22V12M11 20l9 5M37 20l-9 5M14 37l7-8M34 37l-7-8"/></svg></div></div>
+                <div class="nodo__texto"><h3>Oportunidades institucionales</h3><p>Promueve el bienestar como resultado, la inclusión y el sentido de pertenencia</p></div>
+            </div>
+    </div>
+</dialog>
+
+<script>
+(function () {
+    // Pop-up de tableros de control
+    var tablero = document.getElementById('tablero-dialogo');
+    var TABLEROS = {
+        spadies: { etapa: 4, icono: 'icono-desercion', titulo: 'Tablero de control sobre deserción (SPADIES)', url: 'https://jagallegov.github.io/tab_des_spadies_fac_2/', texto: 'Herramienta de consulta que apoya la toma de decisiones basadas en evidencia, mediante el seguimiento a la deserción, la ausencia intersemestral y la graduación de los estudiantes de la Sede, las facultades y los programas conforme a la metodología del Sistema para la Prevención de la Deserción en Educación Superior (SPADIES) del Ministerio de Educación Nacional. Permite observar el comportamiento de estas tasas por cohorte de ingreso y por periodo académico, con el fin de identificar los momentos de la trayectoria y los grupos de estudiantes en los que el riesgo de deserción es mayor.' },
+        perdida: { etapa: 4, icono: 'icono-perdida', titulo: 'Tablero de control pérdida de calidad de estudiante', url: 'https://jagallegov.github.io/tab_perd_est/', texto: 'Herramienta de consulta que apoya la toma de decisiones basadas en evidencia, mediante el seguimiento a los casos de pérdida de la calidad de estudiante y a las causales normativas que los originan. Permite observar su distribución por unidad académica y por momento de la trayectoria, y caracterizar a la población afectada, con el fin de orientar el acompañamiento hacia los grupos que concentran mayor riesgo.' },
+        caracterizacion: { etapa: 3, icono: 'icono-caracterizacion', titulo: 'Tablero de control caracterización estudiantil', url: 'https://jagallegov.github.io/tab_car/', texto: 'Herramienta de consulta que apoya la toma de decisiones basadas en evidencia, mediante la descripción del perfil de la población estudiantil de la Sede y su evolución en el tiempo. Permite observar el comportamiento de la matrícula y desagregarla por género, condición socioeconómica, tipo de estudiante, modalidad de admisión, área de conocimiento y lugar de procedencia, con el fin de sustentar el diseño de programas y estrategias ajustados a las características reales de los estudiantes.' },
+        alertas: { etapa: 4, icono: 'icono-alerta', titulo: 'Tablero de control exploración alertas tempranas', url: 'https://jagallegov.github.io/tab_exp_al/', texto: 'Herramienta de consulta que apoya la toma de decisiones basadas en evidencia, mediante el análisis de la primera calificación parcial como señal anticipada de la reprobación de una asignatura. Permite observar cómo varía el desenlace académico según el desempeño inicial del estudiante y comparar ese comportamiento entre asignaturas, con el fin de establecer criterios que activen el acompañamiento antes de que finalice el periodo.' },
+        programacion: { etapa: 4, icono: 'icono-programacion', titulo: 'Tablero de control apoyo a la programación académica', url: 'https://jagallegov.github.io/her_ofer/#rii', texto: 'Herramienta de consulta que apoya la toma de decisiones basadas en evidencia, mediante el análisis del registro de intención de inscripción de los estudiantes, la oferta de asignaturas y los resultados académicos de cada periodo. Permite observar la demanda esperada por asignatura y contrastarla con los cupos ofrecidos, con el fin de orientar la programación académica hacia las asignaturas y los grupos que requieren mayor atención.' },
+        resultados: { etapa: 4, icono: 'icono-resultados', titulo: 'Tablero de control resultados académicos', url: 'https://jagallegov.github.io/res_acad_unal/', texto: 'Herramienta de consulta que apoya la toma de decisiones basadas en evidencia, mediante el seguimiento al desempeño académico de los estudiantes por asignatura y grupo de inscripción durante un periodo académico determinado. Permite observar los resultados generales por asignatura y desagregarlos por grupo y docente, con el fin de identificar las asignaturas que requieren atención y acompañamiento prioritario.' },
+        trayectorias: { etapa: 4, icono: 'icono-trayectorias', titulo: 'Tablero de control trayectorias académicas', url: 'https://jagallegov.github.io/tab_tray_ac/', texto: 'Herramienta de consulta que apoya la toma de decisiones basadas en evidencia, mediante el seguimiento a las cohortes de ingreso a lo largo de su paso por la Universidad. Permite observar la permanencia, la deserción y la graduación semestre a semestre, y desagregar estos resultados por programa, facultad y características de los estudiantes, con el fin de identificar en qué momento de la trayectoria se concentran el abandono y el rezago.' }
+    };
+    if (tablero && tablero.showModal) {
+        document.querySelectorAll('[data-tablero]').forEach(function (boton) {
+            boton.addEventListener('click', function () {
+                var t = TABLEROS[boton.getAttribute('data-tablero')];
+                if (!t) return;
+                tablero.className = 'tablero etapa--' + t.etapa;
+                tablero.querySelector('#tablero__titulo').textContent = t.titulo;
+                tablero.querySelector('[data-tablero-texto]').textContent = t.texto;
+                tablero.querySelector('[data-tablero-enlace]').href = t.url;
+                tablero.querySelector('[data-tablero-icono] use').setAttribute('href', '#' + t.icono);
+                tablero.showModal();
+                tablero.scrollTop = 0;
+            });
+        });
+        tablero.querySelector('[data-cerrar-tablero]').addEventListener('click', function () { tablero.close(); });
+        tablero.addEventListener('click', function (e) { if (e.target === tablero) tablero.close(); });
+    }
+    // Pop-up de nodos del ecosistema
+    var nodos = document.getElementById('nodos-ecosistema');
+    var abrirNodos = document.querySelector('[data-abrir-nodos]');
+    if (nodos && abrirNodos && nodos.showModal) {
+        abrirNodos.addEventListener('click', function (e) { e.preventDefault(); nodos.showModal(); });
+        nodos.querySelector('[data-cerrar-nodos]').addEventListener('click', function () { nodos.close(); });
+        nodos.addEventListener('click', function (e) { if (e.target === nodos) nodos.close(); });
+    }
+    // Desplegables (etapas y documentos)
+    document.querySelectorAll('[data-desplegar]').forEach(function (boton) {
+        var objetivo = document.getElementById(boton.getAttribute('aria-controls'));
+        if (!objetivo) return;
+        boton.addEventListener('click', function () {
+            var abierto = boton.getAttribute('aria-expanded') === 'true';
+            boton.setAttribute('aria-expanded', String(!abierto));
+            objetivo.hidden = abierto;
+            var texto = boton.lastChild;
+            if (texto && texto.nodeType === 3) {
+                var base = texto.textContent.trim();
+                if (base === 'Seguir leyendo' || base === 'Leer menos') texto.textContent = ' ' + (abierto ? 'Seguir leyendo' : 'Leer menos');
+            }
+        });
+    });
+
+
+})();
+</script>
+</body>
+</html>
